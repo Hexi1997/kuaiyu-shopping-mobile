@@ -1,12 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-
+//引入全局mobx
+import GlobalStore from "./mobx";
+//引入Porvider
+import { Provider } from "mobx-react";
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider GlobalStore={GlobalStore}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

@@ -1,32 +1,35 @@
 import Home from "./pages/Home";
-import Root from "./pages/Root";
-import user from "./pages/user";
-import Login from "./pages/user/Login";
+import Login from "./pages/Login";
+import Category from "./pages/Category";
+import Car from "./pages/Car";
+import My from "./pages/My";
 
 const routes = [
   {
-    component: Root,
-    routes: [
-      {
-        path: "/",
-        exact: true,
-        component: Home,
-      },
-      {
-        path: "/user",
-        component: user,
-        routes: [
-          {
-            path: "/user",
-            component: Login,
-          },
-          {
-            path: "/user/login",
-            component: Login,
-          },
-        ],
-      },
-    ],
+    path: "/",
+    exact: true,
+    component: Home,
+  },
+  {
+    path: "/home",
+    component: Home,
+  },
+  {
+    path: "/category",
+    component: Category,
+  },
+  {
+    path: "/car",
+    component: Car,
+  },
+  {
+    path: "/my",
+    component: My,
+  },
+
+  {
+    path: "/login",
+    component: Login,
   },
 ];
 

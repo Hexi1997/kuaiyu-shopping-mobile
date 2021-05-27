@@ -10,9 +10,9 @@ import { selectedColor, theme_color, unselectColor } from "../config";
 import { useIntl } from "react-intl";
 import { TabsType } from "../types";
 
-const Home = (props: any) => {
+const My = (props: any) => {
   const { history } = props;
-  const [selectedTab] = useState<TabsType>("Home");
+  const [selectedTab, setSelectedTab] = useState<TabsType>("My");
   const intl = useIntl();
   return (
     <div style={{ height: "100vh" }}>
@@ -26,10 +26,10 @@ const Home = (props: any) => {
           icon={<HomeOutlined style={{ color: unselectColor }} />}
           selectedIcon={<HomeOutlined style={{ color: selectedColor }} />}
           selected={selectedTab === "Home"}
-          onPress={() => {}}
-        >
-          这是home界面
-        </TabBar.Item>
+          onPress={() => {
+            history.push("/home");
+          }}
+        ></TabBar.Item>
 
         <TabBar.Item
           title={intl.formatMessage({
@@ -69,12 +69,14 @@ const Home = (props: any) => {
           selectedIcon={<InfoCircleOutlined twoToneColor={selectedColor} />}
           selected={selectedTab === "My"}
           onPress={() => {
-            history.push("/my");
+            setSelectedTab("My");
           }}
-        ></TabBar.Item>
+        >
+          这是我的界面
+        </TabBar.Item>
       </TabBar>
     </div>
   );
 };
 
-export default Home;
+export default My;

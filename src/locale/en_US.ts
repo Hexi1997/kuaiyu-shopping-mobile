@@ -1,5 +1,7 @@
 const en_US = {
-  start: "start",
-  switch: "switch",
+  "menu.home": "home",
+  "menu.category": "category",
+  "menu.car": "cart",
+  "menu.my": "mine",
 };
 export default en_US;

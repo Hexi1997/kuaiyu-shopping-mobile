@@ -2,7 +2,7 @@ const { override, fixBabelImports, addLessLoader } = require("customize-cra");
 module.exports = override(
   addLessLoader({
     javascriptEnabled: true,
-    modifyVars: { "@brand-primary": "#1DA57A" },
+    modifyVars: { "@brand-primary": "#42bb84" },
   }),
   fixBabelImports("import", {
     libraryName: "antd-mobile",
