@@ -1,14 +1,40 @@
 import React, { memo, FC } from "react";
-import { Tabs, WhiteSpace } from "antd-mobile";
+import { Tabs } from "antd-mobile";
 import { StickyContainer, Sticky } from "react-sticky";
+import { useIntl } from "react-intl";
+import GoodsTab from "./GoodsTab";
 
 type PropType = {};
+
+export interface Item {
+  id: number;
+  title: string;
+  price: number;
+  stock: number;
+  sales: number;
+  cover: string;
+  description: string;
+  collects_count: number;
+  cover_url: string;
+}
+
+export interface Result {
+  list: Item[];
+  current: number;
+  next: string;
+}
+
 const GoodsTabs: FC<PropType> = memo(() => {
+  const intl = useIntl();
   const tabs = [
-    { title: "First Tab", key: "t1" },
-    { title: "Second Tab", key: "t2" },
-    { title: "Third Tab", key: "t3" },
+    { title: intl.formatMessage({ id: "page.home.sale" }), key: "sale" },
+    { title: intl.formatMessage({ id: "page.home.new" }), key: "new" },
+    {
+      title: intl.formatMessage({ id: "page.home.recommend" }),
+      key: "recommend",
+    },
   ];
+
   function renderTabBar(props: any) {
     return (
       <Sticky>
@@ -22,41 +48,42 @@ const GoodsTabs: FC<PropType> = memo(() => {
   }
 
   return (
-    <Tabs tabs={tabs} initialPage={2} animated={false} useOnPan={false}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "250px",
-          backgroundColor: "#fff",
-        }}
+    <StickyContainer>
+      <Tabs
+        tabs={tabs}
+        initialPage={"sale"}
+        renderTabBar={renderTabBar}
+        swipeable={false}
       >
-        Content of first tab
-      </div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "250px",
-          backgroundColor: "#fff",
-        }}
-      >
-        Content of second tab
-      </div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "250px",
-          backgroundColor: "#fff",
-        }}
-      >
-        Content of third tab
-      </div>
-    </Tabs>
+        <div
+          key="sale"
+          style={{
+            width: "100%",
+            marginTop: "10px",
+          }}
+        >
+          <GoodsTab type="sale" />
+        </div>
+        <div
+          key="new"
+          style={{
+            width: "100%",
+            marginTop: "10px",
+          }}
+        >
+          <GoodsTab type="new" />
+        </div>
+        <div
+          key="recommend"
+          style={{
+            width: "100%",
+            marginTop: "10px",
+          }}
+        >
+          <GoodsTab type="recommend" />
+        </div>
+      </Tabs>
+    </StickyContainer>
   );
 });
 
