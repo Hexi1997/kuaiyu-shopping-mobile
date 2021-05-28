@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { TabBar } from "antd-mobile";
+import { useState } from "react";
+import { TabBar, Toast } from "antd-mobile";
 import {
   HomeOutlined,
   AppstoreOutlined,
@@ -9,13 +9,33 @@ import {
 import { selectedColor, theme_color, unselectColor } from "../config";
 import { useIntl } from "react-intl";
 import { TabsType } from "../types";
+import Swiper from "./components/Swiper";
+import { useRequest } from "ahooks";
+import { getHomeUrl } from "../../service/home";
+import RecommendArea from "./components/RecommendArea";
+import GoodsTabs from "./components/GoodsTabs";
 
 const Home = (props: any) => {
   const { history } = props;
   const [selectedTab] = useState<TabsType>("Home");
   const intl = useIntl();
+
+  const { data, error, loading } = useRequest(getHomeUrl());
+  if (error) {
+    Toast.fail("获取首页数据失败");
+    return <></>;
+  }
+  if (loading) {
+    Toast.loading("加载中");
+    return <></>;
+  }
+  if (data) {
+    Toast.hide();
+    console.log("请求首页数据成功", data);
+  }
+
   return (
-    <div style={{ height: "100vh" }}>
+    <div style={{ height: "100vh", backgroundColor: "#fff" }}>
       <TabBar tabBarPosition="bottom" tintColor={theme_color}>
         <TabBar.Item
           title={intl.formatMessage({
@@ -28,7 +48,18 @@ const Home = (props: any) => {
           selected={selectedTab === "Home"}
           onPress={() => {}}
         >
-          这是home界面
+          <Swiper data={data.slides} />
+          <RecommendArea goods={data.goods.data} />
+          <div
+            style={{
+              height: "8px",
+              backgroundColor: "#efefef",
+              marginTop: "20px",
+              marginBottom: "10px",
+            }}
+          ></div>
+          <GoodsTabs />
+          <div style={{ height: "1000px" }}></div>
         </TabBar.Item>
 
         <TabBar.Item
