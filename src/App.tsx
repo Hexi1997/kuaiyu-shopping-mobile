@@ -6,15 +6,16 @@ import { IntlProvider } from "react-intl";
 import zh_CN from "./locale/zh_CN";
 import en_US from "./locale/en_US";
 
+const chooseLocale = (val: string) => {
+  if (val === "zh") {
+    return zh_CN;
+  } else {
+    return en_US;
+  }
+};
+
 const App = ({ GlobalStore }: any) => {
   const { lang } = GlobalStore;
-  const chooseLocale = (val: string) => {
-    if (val === "zh") {
-      return zh_CN;
-    } else {
-      return en_US;
-    }
-  };
 
   return (
     // 国际化

@@ -1,3 +1,7 @@
+html {
+    font-size: 62.5% !important;
+}
+
 @media only screen and (min-width: 414px) {
     html {
         font-size: 62.5% !important;
@@ -40,4 +44,12 @@
         width: 414px !important;
         margin: 0 auto !important;
     }
+}
+
+//解决tabbar不固定在底部的问题
+.am-tab-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
 }

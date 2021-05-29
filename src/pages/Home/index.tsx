@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState, useCallback } from "react";
 import { TabBar, Toast } from "antd-mobile";
 import {
   HomeOutlined,
@@ -10,22 +10,37 @@ import { selectedColor, theme_color, unselectColor } from "../config";
 import { useIntl } from "react-intl";
 import { TabsType } from "../types";
 import Swiper from "./components/Swiper";
-import { useRequest, useScroll } from "ahooks";
+import { useRequest } from "ahooks";
 import { getHomeUrl } from "../../service/home";
 import RecommendArea from "./components/RecommendArea";
 import GoodsTabs from "./components/GoodsTabs";
+import { useDebounceWindowScroll } from "../../utils/hooks";
+import WarpDiv from "./style";
+import { Icon } from "antd-mobile";
 
 const Home = (props: any) => {
   const { history } = props;
   const [selectedTab] = useState<TabsType>("Home");
   const intl = useIntl();
   const { data, error, loading } = useRequest(getHomeUrl());
-  const ref = useRef<HTMLDivElement>(null);
-  const scroll = useScroll(document);
-
-  if (scroll.top > 200) {
-    // console.log(scroll);
+  const [showReturnBtn, setShowReturnBtn] = useState(false);
+  const [top] = useDebounceWindowScroll();
+  if (top > 400) {
+    if (showReturnBtn === false) {
+      console.log("应该让返回按钮显示");
+      setShowReturnBtn(true);
+    }
+  } else {
+    if (showReturnBtn === true) {
+      console.log("应该让返回按钮隐藏");
+      setShowReturnBtn(false);
+    }
   }
+  const handleClick = useCallback(() => {
+    //滚动到顶部
+    console.log("滚动到顶部");
+    window.scrollTo(0, 0);
+  }, []);
 
   if (error) {
     Toast.fail("获取首页数据失败");
@@ -40,7 +55,10 @@ const Home = (props: any) => {
   }
 
   return (
-    <div ref={ref} style={{ backgroundColor: "#fff" }}>
+    <WarpDiv showReturnBtn={showReturnBtn}>
+      <div className="img-home" onClick={handleClick}>
+        <Icon className="icon-home" type="up" />
+      </div>
       <TabBar tabBarPosition="bottom" tintColor={theme_color}>
         <TabBar.Item
           title={intl.formatMessage({
@@ -108,7 +126,7 @@ const Home = (props: any) => {
           }}
         ></TabBar.Item>
       </TabBar>
-    </div>
+    </WarpDiv>
   );
 };
 

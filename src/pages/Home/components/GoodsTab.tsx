@@ -7,7 +7,7 @@ import { useRequest } from "ahooks";
 const WarpDiv = styled.div`
   .nomore,
   .more {
-    font-size: 1.4rem;
+    font-size: 1rem;
     height: 4rem;
     line-height: 4rem;
     text-align: center;
