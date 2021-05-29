@@ -73,6 +73,7 @@
     "@types/react-router-config": "^5.0.2",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-sticky": "^6.0.3",
+    "@types/styled-components": "^5.1.9",
     "eslint-config-prettier": "^8.3.0",
     "husky": "4.2.3",
     "less": "^4.1.1",

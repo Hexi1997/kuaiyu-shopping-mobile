@@ -9,13 +9,14 @@ import {
 import { selectedColor, theme_color, unselectColor } from "../config";
 import { useIntl } from "react-intl";
 import { TabsType } from "../types";
+import WarpDiv from "./style";
 
 const Car = (props: any) => {
   const { history } = props;
   const [selectedTab, setSelectedTab] = useState<TabsType>("Car");
   const intl = useIntl();
   return (
-    <div style={{ height: "100vh" }}>
+    <WarpDiv>
       <TabBar tabBarPosition="bottom" tintColor={theme_color}>
         <TabBar.Item
           title={intl.formatMessage({
@@ -75,7 +76,7 @@ const Car = (props: any) => {
           }}
         ></TabBar.Item>
       </TabBar>
-    </div>
+    </WarpDiv>
   );
 };
 

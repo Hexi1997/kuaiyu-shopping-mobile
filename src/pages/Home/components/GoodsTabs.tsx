@@ -3,8 +3,12 @@ import { Tabs } from "antd-mobile";
 import { StickyContainer, Sticky } from "react-sticky";
 import { useIntl } from "react-intl";
 import GoodsTab from "./GoodsTab";
+import styled from "styled-components";
 
-type PropType = {};
+const WrapDiv = styled.div`
+  width: 100%;
+  margin-top: 1rem;
+`;
 
 export interface Item {
   id: number;
@@ -24,7 +28,7 @@ export interface Result {
   next: string;
 }
 
-const GoodsTabs: FC<PropType> = memo(() => {
+const GoodsTabs: FC<{}> = memo(() => {
   const intl = useIntl();
   const tabs = [
     { title: intl.formatMessage({ id: "page.home.sale" }), key: "sale" },
@@ -55,33 +59,15 @@ const GoodsTabs: FC<PropType> = memo(() => {
         renderTabBar={renderTabBar}
         swipeable={false}
       >
-        <div
-          key="sale"
-          style={{
-            width: "100%",
-            marginTop: "10px",
-          }}
-        >
+        <WrapDiv key="sale">
           <GoodsTab type="sale" />
-        </div>
-        <div
-          key="new"
-          style={{
-            width: "100%",
-            marginTop: "10px",
-          }}
-        >
+        </WrapDiv>
+        <WrapDiv key="new">
           <GoodsTab type="new" />
-        </div>
-        <div
-          key="recommend"
-          style={{
-            width: "100%",
-            marginTop: "10px",
-          }}
-        >
+        </WrapDiv>
+        <WrapDiv key="recommend">
           <GoodsTab type="recommend" />
-        </div>
+        </WrapDiv>
       </Tabs>
     </StickyContainer>
   );

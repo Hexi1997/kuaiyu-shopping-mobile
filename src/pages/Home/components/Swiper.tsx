@@ -1,5 +1,15 @@
 import { memo, FC, useState } from "react";
 import { Carousel } from "antd-mobile";
+import styled from "styled-components";
+const WrapA = styled.a`
+  display: "inline-block";
+  width: "100%";
+  height: ${(props: { imgHeight: number | string }) => props.imgHeight};
+  .img {
+    width: 100%;
+    vertical-align: top;
+  }
+`;
 
 type PropType = {
   data: {
@@ -25,26 +35,18 @@ const Swiper: FC<PropType> = memo(({ data }) => {
     >
       {data &&
         data.map((item) => (
-          <a
-            key={item.id}
-            href={item.url}
-            style={{
-              display: "inline-block",
-              width: "100%",
-              height: imgHeight,
-            }}
-          >
+          <WrapA imgHeight={imgHeight} key={item.id} href={item.url}>
             <img
               src={item.img_url}
-              alt=""
-              style={{ width: "100%", verticalAlign: "top" }}
+              alt={item.title}
+              className="img"
               onLoad={() => {
                 // fire window resize event to change height
                 window.dispatchEvent(new Event("resize"));
                 setImgHeight("auto");
               }}
             />
-          </a>
+          </WrapA>
         ))}
     </Carousel>
   );

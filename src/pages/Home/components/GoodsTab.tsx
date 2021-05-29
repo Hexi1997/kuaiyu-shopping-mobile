@@ -1,35 +1,37 @@
-import React, { memo, FC, useRef, useEffect } from "react";
+import { memo, FC } from "react";
+import styled from "styled-components";
 import { getSNRPageData } from "../../../service/home";
 import { Result } from "./GoodsTabs";
-import { useDebounceEffect, useMount, useRequest, useScroll } from "ahooks";
+import { useRequest } from "ahooks";
+
+const WarpDiv = styled.div`
+  .nomore,
+  .more {
+    font-size: 1.4rem;
+    height: 4rem;
+    line-height: 4rem;
+    text-align: center;
+  }
+  .item-container {
+    width: 50%;
+    display: inline-block;
+    margin-bottom: 1rem;
+    .img {
+      width: 100%;
+    }
+    .title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+    }
+  }
+`;
 
 type PropType = {
   type: "new" | "sale" | "recommend";
 };
 const NewGoodTab: FC<PropType> = memo(({ type }) => {
-  const ref = useRef(document);
-  const scroll = useScroll(document, ({ top }) => {
-    if (
-      top + document.documentElement.clientHeight >=
-      document.body.scrollHeight
-    ) {
-      loadMore();
-      return true;
-    } else {
-      return false;
-    }
-  });
-  console.log("页面刷新");
-  // useDebounceEffect(() => {
-  //   if (
-  //     scroll.top + document.documentElement.clientHeight + 10 >
-  //     document.body.scrollHeight
-  //   ) {
-  //     //代表滚动到底部，执行loadmore即可
-  //     console.log("加载下一页");
-  //     // loadMore();
-  //   }
-  // }, [scroll]);
   const { data, loadMore, noMore } = useRequest(
     (d: Result | undefined) => {
       if (d?.next) {
@@ -40,7 +42,6 @@ const NewGoodTab: FC<PropType> = memo(({ type }) => {
     },
     {
       loadMore: true,
-      ref: ref,
       throwOnError: true,
       formatResult: (response: any) => {
         console.log(response);
@@ -65,62 +66,34 @@ const NewGoodTab: FC<PropType> = memo(({ type }) => {
   );
 
   return (
-    <>
+    <WarpDiv>
       {data &&
         data.list.map((item) => {
           return (
-            <div
-              key={item.id}
-              style={{
-                width: "50%",
-                display: "inline-block",
-                marginBottom: "10px",
-              }}
-            >
+            <div key={item.id} className="item-container">
               <img
+                alt={item.title}
                 key={item.id}
                 src={item.cover_url}
-                style={{ width: "100%" }}
+                className="img"
               />
-              <div
-                style={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  textAlign: "center",
-                }}
-              >
-                {item.title}
-              </div>
+              <div className="title">{item.title}</div>
             </div>
           );
         })}
-      {noMore && (
+      {noMore ? (
+        <div className="nomore">已经到底啦</div>
+      ) : (
         <div
-          style={{
-            fontSize: "14px",
-            height: "40px",
-            lineHeight: "40px",
-            textAlign: "center",
+          className="more"
+          onClick={() => {
+            loadMore();
           }}
         >
-          已经到底啦
+          加载更多
         </div>
       )}
-      <div
-        style={{
-          fontSize: "14px",
-          textAlign: "center",
-          height: "40px",
-          lineHeight: "40px",
-        }}
-        onClick={() => {
-          loadMore();
-        }}
-      >
-        加载更多
-      </div>
-    </>
+    </WarpDiv>
   );
 });
 

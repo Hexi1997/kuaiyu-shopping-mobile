@@ -1,5 +1,6 @@
 import React, { memo } from "react";
+import WarpDiv from "./style";
 
 export default memo(function Login() {
-  return <div>登录界面</div>;
+  return <WarpDiv>登录界面</WarpDiv>;
 });
