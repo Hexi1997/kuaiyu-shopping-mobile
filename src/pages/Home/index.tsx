@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { TabBar, Toast } from "antd-mobile";
 import {
   HomeOutlined,
@@ -16,7 +16,6 @@ import RecommendArea from "./components/RecommendArea";
 import GoodsTabs from "./components/GoodsTabs";
 import { useDebounceWindowScroll } from "../../utils/hooks";
 import WarpDiv from "./style";
-import { Icon } from "antd-mobile";
 
 const Home = (props: any) => {
   const { history } = props;
@@ -36,11 +35,12 @@ const Home = (props: any) => {
       setShowReturnBtn(false);
     }
   }
-  const handleClick = useCallback(() => {
-    //滚动到顶部
-    console.log("滚动到顶部");
-    window.scrollTo(0, 0);
-  }, []);
+
+  // const handleClick = useCallback(() => {
+  //   //滚动到顶部
+  //   console.log("滚动到顶部");
+  //   document.getElementsByClassName("am-tab-bar")[0].scrollTo(0, 0);
+  // }, []);
 
   if (error) {
     Toast.fail("获取首页数据失败");
@@ -56,9 +56,9 @@ const Home = (props: any) => {
 
   return (
     <WarpDiv showReturnBtn={showReturnBtn}>
-      <div className="img-home" onClick={handleClick}>
+      {/* <div className="img-home" onClick={handleClick}>
         <Icon className="icon-home" type="up" />
-      </div>
+      </div> */}
       <TabBar tabBarPosition="bottom" tintColor={theme_color}>
         <TabBar.Item
           title={intl.formatMessage({

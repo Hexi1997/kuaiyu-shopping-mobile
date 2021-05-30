@@ -39,7 +39,7 @@ const GoodsTabs: FC<{}> = memo(() => {
     },
   ];
 
-  function renderTabBar(props: any) {
+  const renderTabBar = (props: any) => {
     return (
       <Sticky>
         {({ style }) => (
@@ -49,7 +49,7 @@ const GoodsTabs: FC<{}> = memo(() => {
         )}
       </Sticky>
     );
-  }
+  };
 
   return (
     <StickyContainer>

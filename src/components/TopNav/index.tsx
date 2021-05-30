@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { NavBar, Icon } from "antd-mobile";
 import { useHistory } from "react-router";
+import { theme_color } from "../../pages/config";
 type PropType = {
   /**
    * 默认title
@@ -15,8 +16,9 @@ const TopNav: React.FC<PropType> = memo(({ title, onLeftClick }) => {
   const history = useHistory();
   return (
     <NavBar
+      style={{ backgroundColor: theme_color, color: "white" }}
       mode="light"
-      icon={<Icon type="left" />}
+      icon={<Icon type="left" style={{ width: "4rem" }} />}
       onLeftClick={() => {
         if (onLeftClick) {
           onLeftClick();
@@ -24,15 +26,10 @@ const TopNav: React.FC<PropType> = memo(({ title, onLeftClick }) => {
           history.goBack();
         }
       }}
-      // rightContent={
-      //   <HomeOutlined
-      //     onClick={() => {
-      //       history.push("/home");
-      //     }}
-      //   />
-      // }
     >
-      {title ? title : "title"}
+      <span style={{ color: "white", fontSize: "1.5rem" }}>
+        {title ? title : "title"}
+      </span>
     </NavBar>
   );
 });

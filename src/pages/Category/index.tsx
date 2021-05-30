@@ -10,6 +10,8 @@ import { selectedColor, theme_color, unselectColor } from "../config";
 import { useIntl } from "react-intl";
 import { TabsType } from "../types";
 import WarpDiv from "./style";
+import TopNav from "../../components/TopNav";
+import CategoryContent from "./components/Content";
 
 const Category = (props: any) => {
   const { history } = props;
@@ -45,7 +47,8 @@ const Category = (props: any) => {
             setSelectedTab("Category");
           }}
         >
-          这是category界面
+          <TopNav title="图书分类" onLeftClick={() => {}} />
+          <CategoryContent />
         </TabBar.Item>
 
         <TabBar.Item

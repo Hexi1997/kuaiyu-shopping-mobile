@@ -25,6 +25,7 @@ const App = ({ GlobalStore }: any) => {
       defaultLocale={lang}
       messages={chooseLocale(lang)}
     >
+      {/* 渲染路由 */}
       <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
     </IntlProvider>
   );

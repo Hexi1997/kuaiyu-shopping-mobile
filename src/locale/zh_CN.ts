@@ -6,5 +6,8 @@ const zh_CN = {
   "page.home.recommend": "精选",
   "page.home.new": "新书",
   "page.home.sale": "畅销",
+  "page.category.sales": "销量排序",
+  "page.category.price": "价格排序",
+  "page.category.comments_count": "评论排序",
 };
 export default zh_CN;
