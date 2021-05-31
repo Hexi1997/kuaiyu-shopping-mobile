@@ -21,7 +21,17 @@ const Home = (props: any) => {
   const { history } = props;
   const [selectedTab] = useState<TabsType>("Home");
   const intl = useIntl();
-  const { data, error, loading } = useRequest(getHomeUrl());
+  const { data, error, loading } = useRequest(
+    () => {
+      return getHomeUrl();
+    },
+    {
+      formatResult: (response: any) => ({
+        slides: response.slides,
+        goods: response.goods,
+      }),
+    }
+  );
   const [showReturnBtn, setShowReturnBtn] = useState(false);
   const [top] = useDebounceWindowScroll();
   if (top > 400) {
@@ -36,17 +46,11 @@ const Home = (props: any) => {
     }
   }
 
-  // const handleClick = useCallback(() => {
-  //   //滚动到顶部
-  //   console.log("滚动到顶部");
-  //   document.getElementsByClassName("am-tab-bar")[0].scrollTo(0, 0);
-  // }, []);
-
   if (error) {
     Toast.fail("获取首页数据失败");
     return <></>;
   }
-  if (loading) {
+  if (loading || !data) {
     Toast.loading("加载中");
     return <></>;
   }

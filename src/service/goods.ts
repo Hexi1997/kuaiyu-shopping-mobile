@@ -1,5 +1,5 @@
-import { BASE_URL } from "./config";
 import QueryString from "query-string";
+import request from "../utils/request";
 
 export type GoodsSortField = "sales" | "price" | "comments_count";
 
@@ -8,7 +8,7 @@ export type GoodsSortField = "sales" | "price" | "comments_count";
  * @param params 请求参数
  */
 export const getGoodsList = (params: Record<string, any>) => {
-  let url: string = `${BASE_URL}/goods`;
+  let url: string = `/goods`;
   if (params.type) {
     const type = params.type;
     delete params.type;
@@ -18,5 +18,5 @@ export const getGoodsList = (params: Record<string, any>) => {
   if (paramStr) {
     url += `?${paramStr}`;
   }
-  return url;
+  return request(url);
 };

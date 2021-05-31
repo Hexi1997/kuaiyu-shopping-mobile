@@ -1,10 +1,10 @@
 import { BrowserRouter } from "react-router-dom";
-import { renderRoutes } from "react-router-config";
-import routes from "./react-router-config";
 import { inject, observer } from "mobx-react";
 import { IntlProvider } from "react-intl";
 import zh_CN from "./locale/zh_CN";
 import en_US from "./locale/en_US";
+import routes from "./react-router-config";
+import { RenderRoutes } from "./components/RenderRoutes";
 
 const chooseLocale = (val: string) => {
   if (val === "zh") {
@@ -26,7 +26,7 @@ const App = ({ GlobalStore }: any) => {
       messages={chooseLocale(lang)}
     >
       {/* 渲染路由 */}
-      <BrowserRouter>{renderRoutes(routes)}</BrowserRouter>
+      <BrowserRouter>{RenderRoutes(routes)}</BrowserRouter>
     </IntlProvider>
   );
 };

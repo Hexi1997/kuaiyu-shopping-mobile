@@ -1,5 +1,5 @@
 import React, { memo, FC, useState } from "react";
-import useRequest from "@ahooksjs/use-request";
+import { useRequest } from "ahooks";
 import { Accordion, List, Tabs } from "antd-mobile";
 import classnames from "classnames";
 import { useIntl } from "react-intl";
@@ -71,9 +71,14 @@ const CategoryContent: FC<{}> = memo(() => {
 
   //请求网络数据
   const { data } = useRequest(
-    getGoodsList({
-      page: 1,
-    })
+    () => {
+      return getGoodsList({ page: 1 });
+    },
+    {
+      formatResult: (response: any) => ({
+        categories: response.categories,
+      }),
+    }
   );
 
   return (

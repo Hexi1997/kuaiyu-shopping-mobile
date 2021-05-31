@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { getSNRPageData } from "../../../service/home";
 import { Result } from "./GoodsTabs";
 import { useRequest } from "ahooks";
-// import { ListView } from "antd-mobile";
 
 const WarpDiv = styled.div`
   .nomore,
