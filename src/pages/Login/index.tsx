@@ -8,10 +8,11 @@ import { Button, InputItem, Toast } from "antd-mobile";
 import { login, register } from "../../service/user";
 import { SetToken } from "../../utils/storageUtils";
 const Login = memo(({ history, location }: RouteComponentProps) => {
-  let redirectName = location.state;
   const [type, setType] = useState<"login" | "register">("login");
   const [form] = Form.useForm();
   const handleSubmit = useCallback(async () => {
+    let redirectName = location.state;
+
     console.log(form.getFieldsValue());
     //判断全部不能为空
     const values = form.getFieldsValue();
@@ -83,7 +84,7 @@ const Login = memo(({ history, location }: RouteComponentProps) => {
         console.error(e);
       }
     }
-  }, [form, type, redirectName]);
+  }, [form, type, history, location.state]);
 
   const handleChangeType = useCallback(() => {
     //清空输入框

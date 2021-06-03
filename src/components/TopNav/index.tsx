@@ -27,9 +27,7 @@ const TopNav: React.FC<PropType> = memo(({ title, onLeftClick }) => {
         }
       }}
     >
-      <span style={{ color: "white", fontSize: "1.5rem" }}>
-        {title ? title : "title"}
-      </span>
+      <span style={{ color: "white" }}>{title ? title : "title"}</span>
     </NavBar>
   );
 });

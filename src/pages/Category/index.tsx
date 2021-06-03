@@ -18,7 +18,7 @@ const Category = (props: any) => {
   const [selectedTab, setSelectedTab] = useState<TabsType>("Category");
   const intl = useIntl();
   return (
-    <WarpDiv>
+    <WarpDiv className="category">
       <TabBar tabBarPosition="bottom" tintColor={theme_color}>
         <TabBar.Item
           title={intl.formatMessage({

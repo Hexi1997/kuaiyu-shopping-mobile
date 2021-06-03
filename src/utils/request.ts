@@ -11,13 +11,15 @@ type MethodType = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
  * @param method 方法
  * @param params 参数
  * @param config 配置
+ * @param bPrefix 是否添加前缀
  */
 const request = (
   api: string,
   method: MethodType = "GET",
   showLoading: boolean = false,
   params = {},
-  config: { headers?: object } = {}
+  config: { headers?: object } = {},
+  bPrefix: boolean = true
 ) => {
   return new Promise((resolve, reject) => {
     if (showLoading) {
@@ -39,7 +41,7 @@ const request = (
     }
 
     axios({
-      url: BASE_URL + api,
+      url: (bPrefix ? BASE_URL : "") + api,
       method,
       [data]: params,
       headers,

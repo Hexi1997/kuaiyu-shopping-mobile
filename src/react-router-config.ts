@@ -3,6 +3,8 @@ import Login from "./pages/Login";
 import Category from "./pages/Category";
 import Car from "./pages/Car";
 import My from "./pages/My";
+import Address from "./pages/Address";
+import AddressAddOrUpdate from "./pages/AddressUpdate";
 
 export type RouteConfigType = {
   path: string;
@@ -36,9 +38,21 @@ const routes: RouteConfigType = [
   {
     path: "/my",
     auth: true,
+    exact: true,
     component: My,
   },
-
+  {
+    path: "/my/address",
+    auth: true,
+    exact: true,
+    component: Address,
+  },
+  {
+    path: "/my/address/change",
+    auth: true,
+    exact: true,
+    component: AddressAddOrUpdate,
+  },
   {
     path: "/login",
     component: Login,
