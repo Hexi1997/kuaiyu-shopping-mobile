@@ -110,7 +110,7 @@ const AddressAddOrUpdate = memo(() => {
         history.goBack();
       }, 2000);
     } catch (e) {}
-  }, [data.id, history]);
+  }, [data, history]);
 
   //设置默认值
   useMount(() => {

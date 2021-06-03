@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { getGoodsList } from "../../../service/goods";
 import { Result } from "../../types";
 import dayjs from "dayjs";
+import { useHistory } from "react-router-dom";
 
 const WarpDiv = styled.div`
   height: calc(100vh - 138.5px - 1rem);
@@ -66,6 +67,7 @@ type PropType = {
 const ContentTab: FC<PropType> = memo(({ category_id, type }) => {
   //请求网络数据
   console.log("进入");
+  const history = useHistory();
   const { data, run, noMore, loadMore } = useRequest(
     (d: Result | undefined) => {
       if (d?.next) {
@@ -144,7 +146,16 @@ const ContentTab: FC<PropType> = memo(({ category_id, type }) => {
       )} */}
       {data?.list.map((item) => {
         return (
-          <div key={item.id} className="item-container">
+          <div
+            key={item.id}
+            className="item-container"
+            onClick={() => {
+              history.push({
+                pathname: "/good",
+                search: String(item.id),
+              });
+            }}
+          >
             <img alt={item.title} src={item.cover_url} className="item-img" />
             <div className="text-container">
               <div className="top-text">

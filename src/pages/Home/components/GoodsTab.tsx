@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { getSNRPageData } from "../../../service/home";
 import { Result } from "./GoodsTabs";
 import { useRequest } from "ahooks";
+import { useHistory } from "react-router-dom";
 
 const WarpDiv = styled.div`
   .nomore,
@@ -32,6 +33,7 @@ type PropType = {
   type: "new" | "sale" | "recommend";
 };
 const NewGoodTab: FC<PropType> = memo(({ type }) => {
+  const history = useHistory();
   const { data, loadMore, noMore } = useRequest(
     (d: Result | undefined) => {
       if (d?.next) {
@@ -76,7 +78,16 @@ const NewGoodTab: FC<PropType> = memo(({ type }) => {
     <WarpDiv>
       {data.list.map((item) => {
         return (
-          <div key={item.id} className="item-container">
+          <div
+            key={item.id}
+            className="item-container"
+            onClick={() => {
+              history.push({
+                pathname: "/good",
+                search: String(item.id),
+              });
+            }}
+          >
             <img
               alt={item.title}
               key={item.id}

@@ -1,4 +1,5 @@
 import React, { memo, FC } from "react";
+import { useHistory } from "react-router";
 import styled from "styled-components";
 
 const WrapDiv = styled.div`
@@ -39,12 +40,22 @@ type PropType = {
   }[];
 };
 const RecommendArea: FC<PropType> = memo(({ goods }) => {
+  const history = useHistory();
   return (
     <WrapDiv>
       {goods &&
         goods.slice(0, 4).map((item) => {
           return (
-            <div key={item.id} className="item-container">
+            <div
+              key={item.id}
+              className="item-container"
+              onClick={() => {
+                history.push({
+                  pathname: "/good",
+                  search: String(item.id),
+                });
+              }}
+            >
               <img alt={item.title} src={item.cover_url} className="img" />
               <div className="title">
                 {item.title.replace("《", "").replace("》", "")}
