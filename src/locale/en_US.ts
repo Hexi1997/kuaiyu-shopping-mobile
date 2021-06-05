@@ -9,5 +9,14 @@ const en_US = {
   "page.category.sales": "sales",
   "page.category.price": "price",
   "page.category.comments_count": "comments",
+  "page.goodinfo.detail": "detail",
+  "page.goodinfo.comment": "comment",
+  "page.goodinfo.related": "related",
+  "page.orderlist.all": "全部",
+  "page.orderlist.tobepaid": "to-be-paid",
+  "page.orderlist.paid": "paid",
+  "page.orderlist.delivered": "delivered",
+  "page.orderlist.finish": "finish",
+  "page.orderlist.overdue": "overdue",
 };
 export default en_US;

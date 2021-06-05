@@ -4,6 +4,7 @@ import { getSNRPageData } from "../../../service/home";
 import { Result } from "./GoodsTabs";
 import { useRequest } from "ahooks";
 import { useHistory } from "react-router-dom";
+import Loading from "../../../components/Loading";
 
 const WarpDiv = styled.div`
   .nomore,
@@ -49,7 +50,6 @@ const NewGoodTab: FC<PropType> = memo(({ type }) => {
       loadMore: true,
       //格式化返回的结果，因为分页要求结果中必须包括list数组和current
       formatResult: (response: any) => {
-        console.log(response);
         return {
           list: response.goods.data,
           current: response.goods.current_page,
@@ -72,7 +72,7 @@ const NewGoodTab: FC<PropType> = memo(({ type }) => {
   );
 
   if (!data) {
-    return <></>;
+    return <Loading />;
   }
   return (
     <WarpDiv>

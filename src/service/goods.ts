@@ -18,7 +18,7 @@ export const getGoodsList = (params: Record<string, any>) => {
   if (paramStr) {
     url += `?${paramStr}`;
   }
-  return request(url);
+  return request(url, "GET", true);
 };
 /**
  * 获取商品详情

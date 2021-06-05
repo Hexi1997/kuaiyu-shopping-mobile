@@ -99,6 +99,16 @@ const Car = (props: any) => {
       }, 0);
     }
   }, [list]);
+
+  //跳转到订单预览界面
+  const handleJumpToOrderPriview = useCallback(() => {
+    //首先判断是否有商品被选中，有被选中才跳转到订单预览界面
+    if (checkedIds.length === 0) {
+      Toast.info("未选择任何商品", 1);
+      return;
+    }
+    history.push("/orders/preview");
+  }, [checkedIds, history]);
   return (
     <WarpDiv>
       <TabBar tabBarPosition="bottom" tintColor={theme_color}>
@@ -147,16 +157,7 @@ const Car = (props: any) => {
           {list &&
             list.map((item) => {
               return (
-                <div
-                  className="list-container"
-                  key={item.id}
-                  onClick={() => {
-                    history.push({
-                      pathname: "/good",
-                      search: String(item.goods.id),
-                    });
-                  }}
-                >
+                <div className="list-container" key={item.id}>
                   <div className="check-div">
                     <img
                       alt={item.goods.title}
@@ -186,6 +187,12 @@ const Car = (props: any) => {
                     alt={item.goods.title}
                     src={item.goods.cover_url}
                     className="list-img"
+                    onClick={() => {
+                      history.push({
+                        pathname: "/good",
+                        search: String(item.goods.id),
+                      });
+                    }}
                   />
                   <div className="text-area">
                     <div className="top-text">
@@ -247,6 +254,7 @@ const Car = (props: any) => {
                 </div>
               );
             })}
+          <div style={{ height: "5rem" }}></div>
           <div className="bottom-container">
             <div className="select-all-container">
               <img
@@ -279,7 +287,9 @@ const Car = (props: any) => {
             <div className="right-container">
               <span>合计</span>
               <span className="total-price">{getTotalPrice()}元</span>
-              <div className="btn-calc">结算</div>
+              <div className="btn-calc" onClick={handleJumpToOrderPriview}>
+                结算
+              </div>
             </div>
           </div>
         </TabBar.Item>

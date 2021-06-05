@@ -203,7 +203,12 @@ const My = (props: any) => {
           <Item arrow="horizontal" onClick={() => {}}>
             我的收藏
           </Item>
-          <Item arrow="horizontal" onClick={() => {}}>
+          <Item
+            arrow="horizontal"
+            onClick={() => {
+              history.push("/orders");
+            }}
+          >
             我的订单
           </Item>
           <Item arrow="horizontal" onClick={() => {}}>

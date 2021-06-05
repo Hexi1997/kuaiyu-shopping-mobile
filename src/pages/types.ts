@@ -57,6 +57,7 @@ type Goods = {
   id: number;
   user_id: number;
   category_id: number;
+  caetgory_name?: string;
   title: string;
   description: string;
   price: number;

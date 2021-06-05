@@ -73,6 +73,13 @@ const request = (
         } else if (status === 401) {
           if ((responseURL as string).includes("/login")) {
             message = "请确认账号密码输入正确";
+          } else {
+            //跳转到登录界面
+            message = "token过期，即将跳转到登录界面";
+            Toast.fail(message, 1.5);
+            setTimeout(() => {
+              window.location.href = "/login";
+            }, 1500);
           }
         }
         Toast.fail(message, 1.5);

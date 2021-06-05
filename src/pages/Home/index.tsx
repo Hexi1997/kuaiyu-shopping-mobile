@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TabBar, Toast } from "antd-mobile";
+import { TabBar } from "antd-mobile";
 import {
   HomeOutlined,
   AppstoreOutlined,
@@ -16,6 +16,8 @@ import RecommendArea from "./components/RecommendArea";
 import GoodsTabs from "./components/GoodsTabs";
 import { useDebounceWindowScroll } from "../../utils/hooks";
 import WarpDiv from "./style";
+import Loading from "../../components/Loading";
+import Error from "../../components/Error";
 
 const Home = (props: any) => {
   const { history } = props;
@@ -47,15 +49,10 @@ const Home = (props: any) => {
   }
 
   if (error) {
-    Toast.fail("获取首页数据失败");
-    return <></>;
+    return <Error text="获取首页数据失败" />;
   }
   if (loading || !data) {
-    Toast.loading("加载中");
-    return <></>;
-  }
-  if (data) {
-    Toast.hide();
+    return <Loading />;
   }
 
   return (

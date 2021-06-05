@@ -9,5 +9,14 @@ const zh_CN = {
   "page.category.sales": "销量排序",
   "page.category.price": "价格排序",
   "page.category.comments_count": "评论排序",
+  "page.goodinfo.detail": "详情",
+  "page.goodinfo.comment": "热评",
+  "page.goodinfo.related": "相关",
+  "page.orderlist.all": "全部",
+  "page.orderlist.tobepaid": "待付款",
+  "page.orderlist.paid": "已支付",
+  "page.orderlist.delivered": "已发货",
+  "page.orderlist.finish": "已交易",
+  "page.orderlist.overdue": "已过期",
 };
 export default zh_CN;

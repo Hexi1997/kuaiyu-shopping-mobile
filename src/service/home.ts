@@ -24,5 +24,5 @@ export const getSNRPageData = (
   } else if (type === "recommend") {
     url = `/index?recommend=1&sales=0&new=0&page=${pageNum}`;
   }
-  return request(url);
+  return request(url, "GET", true);
 };

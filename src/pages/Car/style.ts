@@ -63,6 +63,8 @@ const WarpDiv = styled.div`
     position: absolute;
     bottom: 0;
     width: 100%;
+    background-color: white;
+    z-index: 999999;
     .select-all-container {
       display: flex;
       align-items: center;
