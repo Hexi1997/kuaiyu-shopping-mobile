@@ -78,7 +78,9 @@ const AddressAddOrUpdate = memo(() => {
       try {
         await updateAddress(data.id, params);
         try {
-          params.is_default === 1 && (await setDefaultAddress(data.id));
+          if (params.is_default === 1) {
+            await setDefaultAddress(data.id);
+          }
         } catch (e) {}
 
         Toast.success("更新成功!", 2);
@@ -97,6 +99,7 @@ const AddressAddOrUpdate = memo(() => {
         }, 2000);
       } catch (e) {
         console.error(e);
+        alert(e);
       }
     }
   }, [form, data, history, type]);
