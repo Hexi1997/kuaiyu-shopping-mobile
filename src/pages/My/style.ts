@@ -1,6 +1,5 @@
 import styled from "styled-components";
 const WarpDiv = styled.div`
-  height: 100vh;
   .info-card-container {
     margin: 1rem;
     height: 10rem;

@@ -38,3 +38,24 @@ export const getOrderDetail = (orderId: number) => {
 export const getOrderPreview = () => {
   return request("/orders/preview");
 };
+/**
+ * 提交订单
+ * @param address_id 地址id
+ */
+export const generateOrder = (address_id: number) => {
+  return request("/orders", "POST", true, { address_id });
+};
+/**
+ * 获取订单物流信息
+ * @param order 订单id
+ */
+export const getOrderExpressInfo = (order: number) => {
+  return request(`/orders/${order}/express`);
+};
+/**
+ * 确认收货
+ * @param order 订单id
+ */
+export const orderConfirm = (order: number) => {
+  return request(`/orders/${order}/confirm`, "PATCH", true);
+};

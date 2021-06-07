@@ -63,7 +63,7 @@ const Address: FC<PropType> = memo(({ history }) => {
           history.push("/my/address/change", { type: "add" });
         }}
       >
-        新增收获地址
+        新增收货地址
       </Button>
     </WarpDiv>
   );

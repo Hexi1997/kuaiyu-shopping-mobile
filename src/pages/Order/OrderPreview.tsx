@@ -1,12 +1,13 @@
 import { useMount } from "ahooks";
-import React, { memo, FC, useState, useCallback } from "react";
+import React, { memo, FC, useState, useEffect } from "react";
 import Loading from "../../components/Loading";
 import styled from "styled-components";
-import { getOrderPreview } from "../../service/order";
+import { generateOrder, getOrderPreview } from "../../service/order";
 import TopNav from "../../components/TopNav";
-import { List } from "antd-mobile";
+import { List, Modal, Toast } from "antd-mobile";
 import { useHistory } from "react-router";
 import border from "../../assets/border.png";
+import { getPayStatus, getQrCode } from "../../service/pay";
 
 const Item = List.Item;
 const Brief = Item.Brief;
@@ -136,11 +137,31 @@ const WarpDiv = styled.div`
 const OrderPreview: FC<PropType> = memo(() => {
   const [data, setData] = useState<OrderPreviewDataType>();
   const history = useHistory();
+  const [addressId, setAddressId] = useState<number>();
+  const [modalVisibile, setModalVisibile] = useState<boolean>(false);
+  const [qrImgUrl, setQrImgUrl] = useState<string>("");
+  //轮询获取状态的定时器id
+  const [intervalId, setIntervalId] = useState<any>();
+
+  useEffect(() => {
+    return () => {
+      //组件卸载时取消定时器
+      intervalId && clearInterval(intervalId);
+    };
+  }, [intervalId]);
+
   useMount(async () => {
     try {
       const res: any = await getOrderPreview();
       console.log(res);
       setData(res);
+      //获取默认的地址
+      const defaultAddress = res.address.find(
+        (item: any) => item.is_default === 1
+      );
+      if (defaultAddress) {
+        setAddressId(defaultAddress.id);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -150,11 +171,6 @@ const OrderPreview: FC<PropType> = memo(() => {
     return <Loading />;
   }
 
-  //获取默认的地址
-  const defaultAddress = data.address.find(
-    (item) => item.is_default === 1
-  ) as Address;
-
   //获取总价
   const getTotalPrice = () => {
     return data.carts.reduce((total: number, current) => {
@@ -162,6 +178,25 @@ const OrderPreview: FC<PropType> = memo(() => {
       return total;
     }, 0);
   };
+
+  const getAddressContent = () => {
+    if (!addressId) {
+      return <div className="tiptext">请设置默认地址</div>;
+    } else {
+      const defaultAddress = data.address.find(
+        (item) => item.id === addressId
+      ) as Address;
+      return (
+        <>
+          {`${defaultAddress.name} ${defaultAddress.phone}`}
+          <Brief>
+            {`${defaultAddress.province} ${defaultAddress.city} ${defaultAddress.county} ${defaultAddress.address}`}
+          </Brief>
+        </>
+      );
+    }
+  };
+
   return (
     <WarpDiv>
       <TopNav title="生成订单" />
@@ -174,17 +209,18 @@ const OrderPreview: FC<PropType> = memo(() => {
         multipleLine
         platform="android"
       >
-        {`${defaultAddress.name} ${defaultAddress.phone}`}
-        <Brief>
-          {`${defaultAddress.province} ${defaultAddress.city} ${defaultAddress.county} ${defaultAddress.address}`}
-        </Brief>
+        {getAddressContent()}
       </Item>
       <div className="border"></div>
       <div className="content-container">
         {data.carts.map((item) => {
           return (
             <div className="list-container" key={item.id}>
-              <img src={item.goods.cover_url} className="cover-img" />
+              <img
+                src={item.goods.cover_url}
+                className="cover-img"
+                alt={item.goods.title}
+              />
               <div className="text-container">
                 <div className="title">{item.goods.title}</div>
                 <div className="price">￥{item.goods.price}</div>
@@ -194,13 +230,76 @@ const OrderPreview: FC<PropType> = memo(() => {
           );
         })}
       </div>
-      <div className="bottom-container">
-        <span className="text-one">商品金额</span>
-        <span className="text-two">合计</span>
-        <span className="text-three">￥</span>
-        <span className="total">{getTotalPrice()}</span>
-        <div className="btn">生成订单</div>
-      </div>
+      {!modalVisibile && (
+        <div className="bottom-container">
+          <span className="text-one">商品金额</span>
+          <span className="text-two">合计</span>
+          <span className="text-three">￥</span>
+          <span className="total">{getTotalPrice()}</span>
+          <div
+            className="btn"
+            onClick={async () => {
+              if (!addressId) {
+                Toast.fail("收货地址未设置", 1);
+                return;
+              }
+
+              try {
+                //生成订单
+                const res: any = await generateOrder(addressId);
+                console.log("下单成功，跳转到支付界面", res);
+                //获取支付宝和微信二维码图片地址
+                const res2: any = await getQrCode(res.id);
+                console.log(res2);
+                //显示支付二维码
+                setModalVisibile(true);
+                setQrImgUrl(res2.qr_code_url);
+                //开启轮询获取支付状态，如果支付成功，则replace到支付成功界面
+                const intervalId = setInterval(async () => {
+                  const res3: any = await getPayStatus(res.id);
+                  console.log("轮询中...", res3);
+                  if (String(res3) === "2") {
+                    //清除轮询
+                    clearInterval(intervalId);
+                    Toast.success("支付成功，即将跳转到我的订单页面", 2);
+                    setModalVisibile(false);
+
+                    setTimeout(() => {
+                      //跳转到订单列表界面
+                      history.replace("/orders");
+                    }, 2000);
+                  }
+                }, 2000);
+                setIntervalId(intervalId);
+              } catch (error) {
+                console.error(error);
+                intervalId && clearInterval(intervalId);
+                setModalVisibile(false);
+              }
+            }}
+          >
+            确认下单
+          </div>
+        </div>
+      )}
+      <Modal
+        visible={modalVisibile}
+        onClose={() => {
+          //设置modal关闭
+          setModalVisibile(false);
+          //清除轮询定时器
+          intervalId && clearInterval(intervalId);
+        }}
+        animationType="slide-up"
+        title="使用支付宝沙箱扫描二维码"
+        style={{
+          zIndex: 9999999,
+          width: "90%",
+          height: "20rem",
+        }}
+      >
+        <img src={qrImgUrl} width="40%" alt="支付二维码" className="qr-img" />
+      </Modal>
     </WarpDiv>
   );
 });

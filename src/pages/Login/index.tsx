@@ -97,7 +97,7 @@ const Login = memo(({ history, location }: RouteComponentProps) => {
     }
   }, [type, setType, form]);
   return (
-    <WarpDiv>
+    <WarpDiv style={{ height: window.innerHeight }}>
       <TopNav
         onLeftClick={() => {}}
         title={type === "login" ? "用户登录" : "用户注册"}

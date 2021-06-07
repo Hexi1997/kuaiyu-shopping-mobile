@@ -151,7 +151,22 @@ const GoodsInfo: FC<PropType> = memo(() => {
           >
             加入购物车
           </div>
-          <div className="buy">立即购买</div>
+          <div
+            className="buy"
+            onClick={async () => {
+              try {
+                await addGoodToCart({
+                  goods_id: String(goodData.goods.id),
+                  num: 1,
+                });
+                history.replace("/car");
+              } catch (error) {
+                console.error(error);
+              }
+            }}
+          >
+            立即购买
+          </div>
         </div>
       </div>
 

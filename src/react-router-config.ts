@@ -8,6 +8,8 @@ import AddressAddOrUpdate from "./pages/AddressUpdate";
 import GoodsInfo from "./pages/GoodsInfo";
 import OrderList from "./pages/Order/OrderList";
 import OrderPreview from "./pages/Order/OrderPreview";
+import OrderExpress from "./pages/Order/OrderExpress";
+import OrderComment from "./pages/Order/OrderComment";
 
 export type RouteConfigType = {
   path: string;
@@ -73,6 +75,18 @@ const routes: RouteConfigType = [
     auth: true,
     exact: true,
     component: OrderPreview,
+  },
+  {
+    path: "/orders/express",
+    auth: true,
+    exact: true,
+    component: OrderExpress,
+  },
+  {
+    path: "/orders/comment",
+    auth: true,
+    exact: true,
+    component: OrderComment,
   },
   {
     path: "/login",

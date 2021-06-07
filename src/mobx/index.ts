@@ -28,6 +28,11 @@ class GlobalStore {
   changeUser = (user: UserType) => {
     this.user = user;
   };
+  //订单列表tabs页面用户选择tab
+  orderTabName: string = "all";
+  changeOrderTabName = (tabname: string) => {
+    this.orderTabName = tabname;
+  };
 }
 
 export default new GlobalStore();

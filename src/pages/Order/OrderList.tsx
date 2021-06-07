@@ -1,5 +1,6 @@
 import { Tabs } from "antd-mobile";
-import React, { memo, FC } from "react";
+import { inject, observer } from "mobx-react";
+import React, { memo, FC, useState } from "react";
 import { useIntl } from "react-intl";
 import { Sticky, StickyContainer } from "react-sticky";
 import styled from "styled-components";
@@ -9,9 +10,32 @@ import OrderTab from "./components/OrderTab";
 const WarpDiv = styled.div``;
 
 type PropType = {};
-const OrderList: FC<PropType> = memo(() => {
-  const intl = useIntl();
 
+const getActiveTabName = (tabName: string) => {
+  console.log("进入获取index", tabName);
+  switch (tabName) {
+    case "all":
+      return 0;
+    case "tobepaid":
+      return 1;
+    case "paid":
+      return 2;
+    case "delivered":
+      return 3;
+    case "finish":
+      return 4;
+    case "overdue":
+      return 5;
+
+    default:
+      return 0;
+  }
+};
+
+const OrderList: FC<PropType> = ({ GlobalStore }: any) => {
+  const intl = useIntl();
+  const { orderTabName, changeOrderTabName } = GlobalStore;
+  console.log(orderTabName);
   const tabs = [
     {
       title: intl.formatMessage({ id: "page.orderlist.all" }),
@@ -44,7 +68,37 @@ const OrderList: FC<PropType> = memo(() => {
       <Sticky>
         {({ style }) => (
           <div style={{ ...style, zIndex: 1 }}>
-            <Tabs.DefaultTabBar {...props} page={6} />
+            <Tabs.DefaultTabBar
+              {...props}
+              page={6}
+              activeTab={getActiveTabName(orderTabName)}
+              onTabClick={(tab, index) => {
+                console.log("点击tab", index);
+                switch (index) {
+                  case 0:
+                    changeOrderTabName("all");
+                    break;
+                  case 1:
+                    changeOrderTabName("tobepaid");
+                    break;
+                  case 2:
+                    changeOrderTabName("paid");
+                    break;
+                  case 3:
+                    changeOrderTabName("delivered");
+                    break;
+                  case 4:
+                    changeOrderTabName("finish");
+                    break;
+                  case 5:
+                    changeOrderTabName("overdue");
+                    break;
+
+                  default:
+                    break;
+                }
+              }}
+            />
           </div>
         )}
       </Sticky>
@@ -57,7 +111,8 @@ const OrderList: FC<PropType> = memo(() => {
       <StickyContainer>
         <Tabs
           tabs={tabs}
-          initialPage={"all"}
+          page={orderTabName}
+          initialPage={orderTabName}
           renderTabBar={renderTabBar}
           swipeable={false}
         >
@@ -83,6 +138,7 @@ const OrderList: FC<PropType> = memo(() => {
       </StickyContainer>
     </WarpDiv>
   );
-});
+};
 
-export default OrderList;
+//函数组件注入mobx，并且设置为观察者模式
+export default inject("GlobalStore")(observer(OrderList));

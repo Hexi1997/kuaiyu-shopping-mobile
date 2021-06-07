@@ -10,11 +10,9 @@ import styled from "styled-components";
 const WarpDiv = styled.div`
   display: flex;
   flex-direction: row;
-  height: calc(100vh - 95px);
 
   .left {
     flex: 1;
-    /* background-color: #ddd; */
     overflow: auto;
     .subchildren {
       padding-left: 2.6rem;

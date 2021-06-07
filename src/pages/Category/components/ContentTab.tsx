@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 import { useHistory } from "react-router-dom";
 
 const WarpDiv = styled.div`
-  height: calc(100vh - 138.5px - 1rem);
   overflow: auto;
   padding-right: 1rem;
   .nomore,

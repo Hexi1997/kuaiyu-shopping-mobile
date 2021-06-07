@@ -1,9 +1,12 @@
-import React, { memo, FC, useCallback } from "react";
-import { useMount, useRequest } from "ahooks";
-import { getOrderList } from "../../../service/order";
+import React, { memo, FC, useCallback, useState, useEffect } from "react";
+import { useRequest } from "ahooks";
+import { getOrderList, orderConfirm } from "../../../service/order";
 import styled from "styled-components";
 import Loading from "../../../components/Loading";
 import Error from "../../../components/Error";
+import { useHistory } from "react-router";
+import { Modal, Toast } from "antd-mobile";
+import { getPayStatus, getQrCode } from "../../../service/pay";
 
 type PropType = {
   type: "all" | "tobepaid" | "paid" | "delivered" | "finish" | "overdue";
@@ -219,7 +222,8 @@ const WarpDiv = styled.div`
 `;
 
 const OrderTab: FC<PropType> = memo(({ type }) => {
-  const { data, run, noMore, loadMore, loading, error } = useRequest(
+  const history = useHistory();
+  const { data, run, noMore, loadMore, loading, error, reload } = useRequest(
     (d: Result | undefined) => {
       if (d?.next) {
         const params: Record<string, any> = {
@@ -270,10 +274,20 @@ const OrderTab: FC<PropType> = memo(({ type }) => {
     }
   );
 
-  useMount(() => {
-    //初次加载数据
+  //二维码modal
+  const [codeModalVisibile, setCodeModalVisibile] = useState<boolean>(false);
+  //二维码图片地址
+  const [qrImgUrl, setQrImgUrl] = useState<string>("");
+  //轮询获取状态的定时器id
+  const [intervalId, setIntervalId] = useState<any>();
+  console.log("刷新");
+
+  useEffect(() => {
     run(undefined);
-  });
+    return () => {
+      intervalId && clearInterval(intervalId);
+    };
+  }, []);
 
   const getStatusText = useCallback((num: number) => {
     switch (num) {
@@ -282,7 +296,7 @@ const OrderTab: FC<PropType> = memo(({ type }) => {
       case 2:
         return "待发货";
       case 3:
-        return "待收获";
+        return "待收货";
       case 4:
         return "已交易";
       case 5:
@@ -293,66 +307,128 @@ const OrderTab: FC<PropType> = memo(({ type }) => {
     }
   }, []);
 
-  const renderBtns = useCallback((status: number, total: number) => {
-    switch (status) {
-      case 1:
-        return (
-          <div className="btns-container">
-            <span className="amount">总价：￥{total}</span>
-            <div className="btns">
-              <div className="btn">去支付</div>
+  const renderBtns = useCallback(
+    (status: number, total: number, id: number) => {
+      switch (status) {
+        case 1:
+          return (
+            <div className="btns-container">
+              <span className="amount">总价：￥{total}</span>
+              <div className="btns">
+                <div
+                  className="btn"
+                  onClick={async () => {
+                    try {
+                      //获取支付宝和微信二维码图片地址
+                      const res2: any = await getQrCode(id);
+                      console.log(res2);
+                      //显示支付二维码
+                      setCodeModalVisibile(true);
+                      setQrImgUrl(res2.qr_code_url);
+                      //开启轮询获取支付状态，如果支付成功，则replace到支付成功界面
+                      const intervalId = setInterval(async () => {
+                        const res3: any = await getPayStatus(id);
+                        console.log("轮询中...", res3);
+                        if (String(res3) === "2") {
+                          //清除轮询
+                          clearInterval(intervalId);
+                          Toast.success("支付成功", 2);
+                          setCodeModalVisibile(false);
+                          setTimeout(() => {
+                            //成功则刷新
+                            reload();
+                          }, 2000);
+                        }
+                      }, 2000);
+                      setIntervalId(intervalId);
+                    } catch (error) {
+                      console.error(error);
+                      intervalId && clearInterval(intervalId);
+                    }
+                  }}
+                >
+                  去支付
+                </div>
+              </div>
             </div>
-          </div>
-        );
-      case 2:
-        return (
-          <div className="btns-container">
-            <span className="amount">总价：￥{total}</span>
-          </div>
-        );
-      case 3:
-        return (
-          <div className="btns-container">
-            <span className="amount">总价：￥{total}</span>
-            <div className="btns">
-              <div className="btn">查看物流</div>
-              <div className="btn">确认收获</div>
+          );
+        case 2:
+          return (
+            <div className="btns-container">
+              <span className="amount">总价：￥{total}</span>
             </div>
-          </div>
-        );
-      case 4:
-        return (
-          <div className="btns-container">
-            <span className="amount">总价：￥{total}</span>
-            <div className="btns">
-              <div className="btn">去评价</div>
+          );
+        case 3:
+          return (
+            <div className="btns-container">
+              <span className="amount">总价：￥{total}</span>
+              <div className="btns">
+                <div
+                  className="btn"
+                  onClick={() => {
+                    history.push({
+                      pathname: "/orders/express",
+                      search: String(id),
+                    });
+                  }}
+                >
+                  查看物流
+                </div>
+                <div
+                  className="btn"
+                  onClick={async () => {
+                    try {
+                      await orderConfirm(id);
+                      Toast.success("确认收货成功!", 1);
+                      setTimeout(() => {
+                        //页面刷新
+                        reload();
+                      }, 1000);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }}
+                >
+                  确认收货
+                </div>
+              </div>
             </div>
-          </div>
-        );
-      case 5:
-        // return (
-        //   <div className="btns-container">
-        //     <span className="amount">总价：￥{total}</span>
-        //     <div className="btns">
-        //       <div className="btn">去支付</div>
-        //       <div className="btn">取消</div>
-        //     </div>
-        //   </div>
-        // );
-        return (
-          <div className="btns-container">
-            <span className="amount">总价：￥{total}</span>
-          </div>
-        );
+          );
+        case 4:
+          return (
+            <div className="btns-container">
+              <span className="amount">总价：￥{total}</span>
+              <div className="btns">
+                <div className="btn">去评价</div>
+              </div>
+            </div>
+          );
+        case 5:
+          // return (
+          //   <div className="btns-container">
+          //     <span className="amount">总价：￥{total}</span>
+          //     <div className="btns">
+          //       <div className="btn">去支付</div>
+          //       <div className="btn">取消</div>
+          //     </div>
+          //   </div>
+          // );
+          return (
+            <div className="btns-container">
+              <span className="amount">总价：￥{total}</span>
+            </div>
+          );
 
-      default:
-        return (
-          <div className="btns-container">
-            <span className="amount">总价：￥{total}</span>
-          </div>
-        );
-    }
-  }, []);
+        default:
+          return (
+            <div className="btns-container">
+              <span className="amount">总价：￥{total}</span>
+            </div>
+          );
+      }
+    },
+    [history, intervalId, reload]
+  );
 
   if (loading || !data) {
     return <Loading />;
@@ -405,7 +481,7 @@ const OrderTab: FC<PropType> = memo(({ type }) => {
               );
             })}
             {/* 渲染按钮组 */}
-            {renderBtns(item.status, item.amount)}
+            {renderBtns(item.status, item.amount, item.id)}
           </div>
         );
       })}
@@ -420,6 +496,26 @@ const OrderTab: FC<PropType> = memo(({ type }) => {
         >
           加载更多
         </div>
+      )}
+      {type === "tobepaid" && (
+        <Modal
+          visible={codeModalVisibile}
+          onClose={() => {
+            //设置modal关闭
+            setCodeModalVisibile(false);
+            //清除轮询定时器
+            intervalId && clearInterval(intervalId);
+          }}
+          animationType="slide-up"
+          title="使用支付宝沙箱扫描二维码"
+          style={{
+            zIndex: 9999999,
+            width: "90%",
+            height: "20rem",
+          }}
+        >
+          <img src={qrImgUrl} width="40%" alt="支付二维码" className="qr-img" />
+        </Modal>
       )}
     </WarpDiv>
   );

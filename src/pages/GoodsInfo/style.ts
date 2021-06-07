@@ -1,7 +1,6 @@
 import styled from "styled-components";
 const WarpDiv = styled.div`
   background-color: white;
-  height: 100vh;
   .cover_container {
     position: relative;
     .cover_url {
